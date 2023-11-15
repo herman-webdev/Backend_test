@@ -1,4 +1,3 @@
-import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -18,7 +17,6 @@ import { LocalStrategyService } from './strategies/local-strategy.service';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: `.env` }),
-    HttpModule,
     MongooseModule.forFeature([
       {
         name: User.name,
@@ -32,7 +30,6 @@ import { LocalStrategyService } from './strategies/local-strategy.service';
   controllers: [ApiController],
   providers: [
     ApiService,
-    HttpModule,
     UserService,
     JwtTokenHelper,
     PasswordHashHelper,
@@ -42,7 +39,6 @@ import { LocalStrategyService } from './strategies/local-strategy.service';
   ],
   exports: [
     ApiService,
-    HttpModule,
     UserService,
     JwtTokenHelper,
     PasswordHashHelper,
