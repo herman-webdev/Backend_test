@@ -12,7 +12,7 @@ export class ApiTokenService {
     try {
       const response = await firstValueFrom(
         this.httpService
-          .get<Types.ObjectId>('http://localhost:5000/auth/user', {
+          .get<Types.ObjectId>(String(process.env.AUTH_API_URL), {
             headers: {
               Authorization: token,
             },
