@@ -19,12 +19,14 @@ export class ApiService {
   ): Promise<ApiCreateResponse> {
     try {
       const todo = this.todoService.createTodo(ownerId, createTodo);
+
       return { id: (await todo).id };
     } catch (error) {
-      throw new HttpException(
-        'Something went wrong...',
-        HttpStatus.BAD_REQUEST,
-      );
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw error;
+      }
     }
   }
 
@@ -40,10 +42,11 @@ export class ApiService {
 
       return formattedTodos;
     } catch (error) {
-      throw new HttpException(
-        'Something went wrong...',
-        HttpStatus.BAD_REQUEST,
-      );
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw error;
+      }
     }
   }
 
@@ -64,10 +67,11 @@ export class ApiService {
 
       return deletedTodo;
     } catch (error) {
-      throw new HttpException(
-        'Something went wrong...',
-        HttpStatus.BAD_REQUEST,
-      );
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw error;
+      }
     }
   }
 }
