@@ -14,7 +14,7 @@ import { SigninDto } from './dto/signin.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtApiGuard } from './strategies/canAcivate.service';
 
-@Controller('api')
+@Controller('auth')
 export class ApiController {
   constructor(private readonly apiService: ApiService) {}
 

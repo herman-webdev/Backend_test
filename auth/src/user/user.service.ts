@@ -13,7 +13,6 @@ export class UserService {
 
   async createUser(password: string): Promise<UserDocument> {
     const user = await this.userModel.create({ password: password });
-
     return user.save();
   }
 }
