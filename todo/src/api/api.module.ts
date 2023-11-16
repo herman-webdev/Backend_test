@@ -18,6 +18,12 @@ import { ApiTokenService } from './token.service';
       },
     ]),
     forwardRef(() => TodoModule),
+    HttpModule.registerAsync({
+      useFactory: () => ({
+        timeout: Number(process.env.HTTP_TIMEOUT),
+        maxRedirects: Number(process.env.HTTP_MAX_REDIRECTS),
+      }),
+    }),
   ],
   controllers: [ApiController],
   providers: [ApiService, ApiTokenService, HttpModule],

@@ -19,10 +19,9 @@ export class ApiController {
     @Res({ passthrough: true }) res: Response,
   ) {
     try {
-      const bearerToken = this.apiTokenService.getBearerToken(
+      const ownerId = await this.apiTokenService.sendBearerToken(
         req.headers.authorization,
       );
-      const ownerId = await this.apiTokenService.sendBearerToken(bearerToken);
 
       const record = await this.apiService.create(ownerId, dto);
       return record;
@@ -34,10 +33,9 @@ export class ApiController {
   @Get('get')
   async get(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     try {
-      const bearerToken = this.apiTokenService.getBearerToken(
+      const ownerId = await this.apiTokenService.sendBearerToken(
         req.headers.authorization,
       );
-      const ownerId = await this.apiTokenService.sendBearerToken(bearerToken);
 
       return await this.apiService.get(ownerId);
     } catch (error) {
@@ -52,10 +50,9 @@ export class ApiController {
     @Res({ passthrough: true }) res: Response,
   ) {
     try {
-      const bearerToken = this.apiTokenService.getBearerToken(
+      const ownerId = await this.apiTokenService.sendBearerToken(
         req.headers.authorization,
       );
-      const ownerId = await this.apiTokenService.sendBearerToken(bearerToken);
 
       return await this.apiService.delete(ownerId, dto);
     } catch (error) {

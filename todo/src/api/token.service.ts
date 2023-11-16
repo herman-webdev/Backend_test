@@ -1,30 +1,30 @@
+import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import axios from 'axios';
+import { AxiosError } from 'axios';
 import { Types } from 'mongoose';
+import { catchError, firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class ApiTokenService {
-  constructor() {}
-
-  getBearerToken(authorizationHeader: string): string {
-    if (!authorizationHeader)
-      throw new HttpException('Bad token', HttpStatus.UNAUTHORIZED);
-    if (typeof authorizationHeader !== 'string')
-      throw new HttpException('Bad token', HttpStatus.FORBIDDEN);
-
-    const token = authorizationHeader.replace('Bearer ', '');
-    return token;
-  }
+  constructor(private readonly httpService: HttpService) {}
 
   async sendBearerToken(token: string): Promise<Types.ObjectId> {
     try {
-      const response = await axios.get('http://localhost:5000/auth/user', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await firstValueFrom(
+        this.httpService
+          .get<Types.ObjectId>('http://localhost:5000/auth/user', {
+            headers: {
+              Authorization: token,
+            },
+          })
+          .pipe(
+            catchError((error: AxiosError) => {
+              throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+            }),
+          ),
+      );
 
-      return await response.data;
+      return response.data;
     } catch (error) {
       throw new HttpException(
         'Something went wrong...',
