@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from './pipes/validation.pipe';
 
 async function bootstrap() {
-  const port = process.env.PORT || 5003;
+  const port = process.env.PORT || 5001;
   const host = process.env.HOST || 'localhost';
   const baseUrl = `http://${host}:${port}`;
 
