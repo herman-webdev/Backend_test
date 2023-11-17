@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { ApiService } from '../api.service';
@@ -18,14 +13,20 @@ export class LocalStrategyService extends PassportStrategy(Strategy, 'local') {
   async validate(id: Types.ObjectId): Promise<any> {
     try {
       const user = await this.apiService.validateUser(id);
-
       if (!user) {
-        throw new UnauthorizedException('Invalid credentials...');
+        throw new HttpException(
+          'Invalid credentials...',
+          HttpStatus.UNAUTHORIZED,
+        );
       }
 
       return user;
     } catch (error) {
-      throw new HttpException('Bad id or password...', HttpStatus.UNAUTHORIZED);
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw error;
+      }
     }
   }
 }

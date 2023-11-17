@@ -1,0 +1,59 @@
+version: '3.7'
+services:
+  auth-microservice:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile.dev
+    image: auth:latest
+    container_name: auth-microservice
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb+srv://Herman:admin123@cluster.afi5z9o.mongodb.net/?retryWrites=true&w=majority
+    ports:
+      - 5000:5001
+    depends_on:
+      - mongodb
+    volumes:
+      - ./auth:/src
+    networks:
+      - web-net
+    restart: always
+
+  todo-microservice:
+    build:
+      context: ./todo
+      dockerfile: Dockerfile.dev
+    image: todo:latest
+    container_name: todo-microservice
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb+srv://Herman:admin123@cluster.afi5z9o.mongodb.net/?retryWrites=true&w=majority
+      - AUTH_API_URL='http://localhost:5000/auth/user'
+    ports:
+      - 5002:5003
+    depends_on:
+      - mongodb
+    volumes:
+      - ./todo:/src
+    networks:
+      - web-net
+    restart: always
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: Herman
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin123
+      ME_CONFIG_MONGODB_URL: mongodb+srv://Herman:admin123@cluster.afi5z9o.mongodb.net/?retryWrites=true&w=majority
+    ports:
+      - 27017:27017
+    volumes:
+      - dbdata6:/data/db
+    networks:
+      - web-net
+
+volumes:
+  dbdata6:
+
+networks:
+  web-net:
+    driver: bridge

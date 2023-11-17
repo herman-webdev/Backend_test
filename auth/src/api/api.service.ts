@@ -22,6 +22,7 @@ export class ApiService {
       const hash = await PasswordHashHelper.generateHash(password);
       const candidate = await this.userService.createUser(hash);
       const token = JwtTokenHelper.generate(candidate._id);
+
       return {
         id: candidate._id,
         token: token,
@@ -36,12 +37,13 @@ export class ApiService {
 
   async signin(signinOptions: SigninDto): Promise<ApiSigninResponse> {
     try {
+      if (!signinOptions.id || !signinOptions.password) {
+        throw new HttpException('Bad id or password', HttpStatus.UNAUTHORIZED);
+      }
+
       const candidate = await this.userService.findUserbyId(signinOptions.id);
       if (!candidate) {
-        throw new HttpException(
-          'Bad id or password...',
-          HttpStatus.UNAUTHORIZED,
-        );
+        throw new HttpException('Bad id or password', HttpStatus.UNAUTHORIZED);
       }
 
       const checkPassword = await PasswordHashCompareHelper.makeCompare(
@@ -49,21 +51,20 @@ export class ApiService {
         candidate.password,
       );
       if (!checkPassword) {
-        throw new HttpException(
-          'Bad id or password...',
-          HttpStatus.UNAUTHORIZED,
-        );
+        throw new HttpException('Bad id or password', HttpStatus.UNAUTHORIZED);
       }
 
       const token = JwtTokenHelper.generate(candidate._id);
+
       return {
         token: token,
       };
     } catch (error) {
-      throw new HttpException(
-        'Something went wrong...',
-        HttpStatus.BAD_REQUEST,
-      );
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw error;
+      }
     }
   }
 

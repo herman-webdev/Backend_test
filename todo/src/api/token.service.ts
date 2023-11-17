@@ -8,28 +8,31 @@ import { catchError, firstValueFrom } from 'rxjs';
 export class ApiTokenService {
   constructor(private readonly httpService: HttpService) {}
 
-  async sendBearerToken(token: string): Promise<Types.ObjectId> {
-    try {
-      const response = await firstValueFrom(
-        this.httpService
-          .get<Types.ObjectId>(String(process.env.AUTH_API_URL), {
-            headers: {
-              Authorization: token,
-            },
-          })
-          .pipe(
-            catchError((error: AxiosError) => {
-              throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
-            }),
-          ),
-      );
+  async sendBearerToken(
+    token: string | undefined | any,
+  ): Promise<Types.ObjectId> {
+    if (token === undefined)
+      throw new HttpException('Bad token', HttpStatus.UNAUTHORIZED);
+    if (typeof token !== 'string')
+      throw new HttpException('Bad token', HttpStatus.FORBIDDEN);
 
-      return response.data;
-    } catch (error) {
-      throw new HttpException(
-        'Something went wrong...',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    const response = await firstValueFrom(
+      this.httpService
+        .get<Types.ObjectId>(process.env.AUTH_API_URL, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .pipe(
+          catchError((error: AxiosError) => {
+            throw new HttpException(
+              'Bad token',
+              error.response?.status || HttpStatus.BAD_GATEWAY,
+            );
+          }),
+        ),
+    );
+
+    return response.data;
   }
 }

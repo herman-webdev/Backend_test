@@ -18,45 +18,30 @@ export class ApiController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    try {
-      const ownerId = await this.apiTokenService.sendBearerToken(
-        req.headers.authorization,
-      );
+    const ownerId = await this.apiTokenService.sendBearerToken(
+      req.headers.authorization,
+    );
+    const record = await this.apiService.create(ownerId, dto);
+    res.status(200);
 
-      const record = await this.apiService.create(ownerId, dto);
-      return record;
-    } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error' });
-    }
+    return record;
   }
 
   @Get('get')
-  async get(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    try {
-      const ownerId = await this.apiTokenService.sendBearerToken(
-        req.headers.authorization,
-      );
+  async get(@Req() req: Request) {
+    const ownerId = await this.apiTokenService.sendBearerToken(
+      req.headers.authorization,
+    );
 
-      return await this.apiService.get(ownerId);
-    } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error' });
-    }
+    return await this.apiService.get(ownerId);
   }
 
   @Delete('delete')
-  async delete(
-    @Body() dto: DeleteTodoDto,
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    try {
-      const ownerId = await this.apiTokenService.sendBearerToken(
-        req.headers.authorization,
-      );
+  async delete(@Body() dto: DeleteTodoDto, @Req() req: Request) {
+    const ownerId = await this.apiTokenService.sendBearerToken(
+      req.headers.authorization,
+    );
 
-      return await this.apiService.delete(ownerId, dto);
-    } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error' });
-    }
+    return await this.apiService.delete(ownerId, dto);
   }
 }

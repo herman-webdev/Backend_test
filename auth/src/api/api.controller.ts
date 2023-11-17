@@ -25,9 +25,11 @@ export class ApiController {
   ) {
     try {
       const record = await this.apiService.signun(dto);
+      res.status(200);
+
       return record;
     } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error' });
+      return res.status(error.getStatus()).json({ message: error.message });
     }
   }
 
@@ -39,9 +41,11 @@ export class ApiController {
   ) {
     try {
       const user = await this.apiService.signin(dto);
+      res.status(200);
+
       return user;
     } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error' });
+      return res.status(error.getStatus()).json({ message: error.message });
     }
   }
 

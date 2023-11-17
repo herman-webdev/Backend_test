@@ -22,11 +22,12 @@ export class JwtApiGuard implements CanActivate {
       const bearer = authHeader.split(' ')[0];
       const token = authHeader.split(' ')[1];
       if (bearer !== 'Bearer' || !token) {
-        throw new UnauthorizedException('Authentication failed');
+        throw new UnauthorizedException('Bad token');
       }
 
       const user = this.jwtService.verify(token);
       req.user = user;
+
       return user;
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
@@ -34,7 +35,7 @@ export class JwtApiGuard implements CanActivate {
       } else if (error.name === 'JsonWebTokenError') {
         throw new HttpException('Invalid token', HttpStatus.FORBIDDEN);
       } else {
-        throw new HttpException('Authentication failed', HttpStatus.FORBIDDEN);
+        throw new HttpException('Bad token', HttpStatus.FORBIDDEN);
       }
     }
   }

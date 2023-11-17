@@ -7,7 +7,7 @@ import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: `.env` }),
-    MongooseModule.forRoot(String(process.env.MONGO_DB)),
+    MongooseModule.forRoot(process.env.ME_CONFIG_MONGODB_URL),
     ApiModule,
     UserModule,
   ],
