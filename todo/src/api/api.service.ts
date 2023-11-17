@@ -16,7 +16,7 @@ export class ApiService {
   async create(
     ownerId: Types.ObjectId,
     createTodo: CreateTodoDto,
-  ): Promise<ApiCreateResponse> {
+  ): Promise<ApiCreateResponse | HttpException> {
     try {
       const todo = this.todoService.createTodo(ownerId, createTodo);
 
@@ -30,7 +30,9 @@ export class ApiService {
     }
   }
 
-  async get(ownerId: Types.ObjectId): Promise<ApiGetResponse[]> {
+  async get(
+    ownerId: Types.ObjectId,
+  ): Promise<ApiGetResponse[] | HttpException> {
     try {
       const todos = await this.todoService.findAllById(ownerId);
 
@@ -56,14 +58,15 @@ export class ApiService {
   ): Promise<ApiDeleteResponse> {
     try {
       const existingTodo = await this.todoService.findById(deleteTodo.id);
-      if (!existingTodo) {
+      if (!existingTodo)
         throw new HttpException('Todo is not found...', HttpStatus.NOT_FOUND);
-      }
 
       const deletedTodo = await this.todoService.deleteTodo(
         ownerId,
         deleteTodo.id,
       );
+      if (deletedTodo === null)
+        throw new HttpException('Is not an owner!', HttpStatus.FORBIDDEN);
 
       return deletedTodo;
     } catch (error) {

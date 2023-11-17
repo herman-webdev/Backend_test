@@ -37,22 +37,19 @@ export class ApiService {
 
   async signin(signinOptions: SigninDto): Promise<ApiSigninResponse> {
     try {
-      if (!signinOptions.id || !signinOptions.password) {
+      if (!signinOptions.id || !signinOptions.password)
         throw new HttpException('Bad id or password', HttpStatus.UNAUTHORIZED);
-      }
 
       const candidate = await this.userService.findUserbyId(signinOptions.id);
-      if (!candidate) {
+      if (!candidate)
         throw new HttpException('Bad id or password', HttpStatus.UNAUTHORIZED);
-      }
 
       const checkPassword = await PasswordHashCompareHelper.makeCompare(
         signinOptions.password,
         candidate.password,
       );
-      if (!checkPassword) {
+      if (!checkPassword)
         throw new HttpException('Bad id or password', HttpStatus.UNAUTHORIZED);
-      }
 
       const token = JwtTokenHelper.generate(candidate._id);
 
@@ -70,9 +67,7 @@ export class ApiService {
 
   async validateUser(id: Types.ObjectId): Promise<boolean> {
     const user = await this.userService.findUserbyId(id);
-    if (!user) {
-      throw new NotFoundException();
-    }
+    if (!user) throw new NotFoundException();
 
     return true;
   }
