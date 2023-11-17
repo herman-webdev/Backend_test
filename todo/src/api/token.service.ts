@@ -18,7 +18,7 @@ export class ApiTokenService {
 
     const response = await firstValueFrom(
       this.httpService
-        .get<Types.ObjectId>(process.env.AUTH_API_URL, {
+        .get<Types.ObjectId>(String(process.env.AUTH_API_URL), {
           headers: {
             Authorization: token,
           },
