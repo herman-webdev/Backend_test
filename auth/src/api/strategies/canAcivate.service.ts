@@ -28,7 +28,7 @@ export class JwtApiGuard implements CanActivate {
       const user = this.jwtService.verify(token);
       req.user = user;
 
-      return user;
+      return true;
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
         throw new HttpException('Token has expired', HttpStatus.FORBIDDEN);
