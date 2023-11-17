@@ -18,7 +18,7 @@ export class ApiTokenService {
 
     const response = await firstValueFrom(
       this.httpService
-        .get<Types.ObjectId>(process.env.AUTH_API_URL, {
+        .get<Types.ObjectId>('http://auth-microservice:5000/auth/user', {
           headers: {
             Authorization: token,
           },
@@ -26,7 +26,7 @@ export class ApiTokenService {
         .pipe(
           catchError((error: AxiosError) => {
             throw new HttpException(
-              'Bad token',
+              error.message,
               error.response?.status || HttpStatus.BAD_GATEWAY,
             );
           }),
