@@ -55,7 +55,7 @@ export class ApiService {
   async delete(
     ownerId: Types.ObjectId,
     deleteTodo: DeleteTodoDto,
-  ): Promise<ApiDeleteResponse> {
+  ): Promise<ApiDeleteResponse | HttpException> {
     try {
       const existingTodo = await this.todoService.findById(deleteTodo.id);
       if (!existingTodo)

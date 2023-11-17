@@ -10,7 +10,7 @@ export class LocalStrategyService extends PassportStrategy(Strategy, 'local') {
     super({ usernameField: 'id' });
   }
 
-  async validate(id: Types.ObjectId): Promise<any> {
+  async validate(id: Types.ObjectId): Promise<boolean | HttpException> {
     try {
       const user = await this.apiService.validateUser(id);
       if (!user) {
