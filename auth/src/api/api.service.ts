@@ -17,7 +17,9 @@ import { PasswordHashCompareHelper } from './helpers/hash-compare.helper';
 export class ApiService {
   constructor(private readonly userService: UserService) {}
 
-  async signun({ password }: SignupDto): Promise<ApiSignupResponse> {
+  async signun({
+    password,
+  }: SignupDto): Promise<ApiSignupResponse | HttpException> {
     try {
       const hash = await PasswordHashHelper.generateHash(password);
       const candidate = await this.userService.createUser(hash);
@@ -35,7 +37,9 @@ export class ApiService {
     }
   }
 
-  async signin(signinOptions: SigninDto): Promise<ApiSigninResponse> {
+  async signin(
+    signinOptions: SigninDto,
+  ): Promise<ApiSigninResponse | HttpException> {
     try {
       if (!signinOptions.id || !signinOptions.password)
         throw new HttpException('Bad id or password', HttpStatus.UNAUTHORIZED);

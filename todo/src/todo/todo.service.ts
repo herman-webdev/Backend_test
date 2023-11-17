@@ -32,7 +32,7 @@ export class TodoService {
   async deleteTodo(
     ownerId: Types.ObjectId,
     todoId: Types.ObjectId,
-  ): Promise<{ id: Types.ObjectId }> {
+  ): Promise<{ id: Types.ObjectId } | null> {
     const deletedTodo = await this.todoModel.findOneAndDelete({
       _id: todoId,
       owner: ownerId,
