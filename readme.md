@@ -1,7 +1,7 @@
 #Backend test task
 
 Architecture:
-![Alt text](./achitecture.png)
+![Alt text](./acrhitecture.png)
 
 ## Table of contents
 
