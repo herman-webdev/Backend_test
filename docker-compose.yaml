@@ -26,7 +26,6 @@ services:
     container_name: todo-microservice
     environment:
       - ME_CONFIG_MONGODB_URL=mongodb+srv://Herman:admin123@cluster.afi5z9o.mongodb.net/?retryWrites=true&w=majority
-      - AUTH_API_URL='http://localhost:5000/auth/user'
     ports:
       - 5001:5001
     depends_on:
